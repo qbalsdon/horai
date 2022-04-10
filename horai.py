@@ -4,7 +4,7 @@ import os
 import subprocess
 import tkinter as tk
 
-from lib import polling_client as PC
+from modules import polling_client as PC
 
 def load_settings():
     try:
