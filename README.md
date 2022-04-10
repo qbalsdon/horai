@@ -38,7 +38,7 @@ All settings are optional. The development should happen in such a manner that a
 ## About
 This is a labour of love regarding automation. The goal is to let developers access what they need to quicker and do less command line management. I wrote the original scripts in bash, then re-did them in Python, and now I want to create an easy interface, requiring a new re-write.
 
-All images are subject to copywrite on [FreePik][2] and are used with my paid subscription.
+All images are subject to copyright on [FreePik][2] and are used with my paid subscription.
 
 
   [0]: https://github.com/Genymobile/scrcpy
