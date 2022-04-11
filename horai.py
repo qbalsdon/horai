@@ -15,7 +15,11 @@ def load_settings():
             return {}
         return json.loads(data)
     except:
-        return None
+        return {}
+
+# TODO
+def save_settings(data):
+    pass
 
 def is_adb_installed():
     try:
@@ -24,13 +28,7 @@ def is_adb_installed():
     except FileNotFoundError:
         return False
 
-if __name__ == "__main__":
-    settings = load_settings()
-    if settings == None:
-        print("Unable to load settings. Ensure you have an environment variable named `HORAI_SETTINGS` and that the value is a file reference")
-    if not is_adb_installed():
-        print("Unable to find adb. Ensure you have the Android Debug Bridge installed")
-
+def start():
     root = tk.Tk()
     width = root.winfo_width() #get root width size
     height = root.winfo_screenheight() #get screen height size
@@ -38,3 +36,12 @@ if __name__ == "__main__":
 
     client = PC.PollingClient(root, load_settings)
     root.mainloop()
+
+if __name__ == "__main__":
+    settings = load_settings()
+    if settings == None:
+        print("Unable to load settings. Ensure you have an environment variable named `HORAI_SETTINGS` and that the value is a file reference")
+    elif not is_adb_installed():
+        print("Unable to find adb. Ensure you have the Android Debug Bridge installed")
+    else:
+        start()

@@ -29,6 +29,7 @@ All settings are optional. The development should happen in such a manner that a
     - allow device selection to be toggled by numbers 1 - 0
     - COMMAND+S will start scrcpy on all selected devices
     - when a device is saved - check where the UI automator dumps output and save that with it
+  - Save settings
 
 #### BUGS
 
