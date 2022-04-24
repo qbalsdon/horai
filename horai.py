@@ -5,6 +5,7 @@ import subprocess
 import tkinter as tk
 
 from modules import polling_client as PC
+from modules import android_device as AD
 
 def load_settings():
     try:
@@ -44,4 +45,12 @@ if __name__ == "__main__":
     elif not is_adb_installed():
         print("Unable to find adb. Ensure you have the Android Debug Bridge installed")
     else:
+        # pixel5 = AD.AndroidDevice("13021FDD4005XC")
+        # archos = AD.AndroidDevice("FS204602820")
+        #
+        # print("Pixel 5")
+        # pixel5.fetch_window_dump()
+        # print("Archos")
+        # archos.fetch_window_dump()
+
         start()

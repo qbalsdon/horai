@@ -22,13 +22,17 @@ class DeviceTray:
            widget.destroy()
         container.pack_forget()
 
-    def device_name_formatted(self, device_serial):
+    def device_name_formatted(self, device_serial, device_state):
         name = None #get_device_name(device_serial)
         if name == None:
             name = device_serial
         else:
             name = f"{name} ({device_serial[0:5]}...)"
-        return name
+
+        if device_state == "device":
+            return name
+        else:
+            return f"{name} ({device_state})"
 
     def create_binding(self, listener, binding_name, fn):
         binding = f"<{binding_name}>"
@@ -57,7 +61,7 @@ class DeviceTray:
             for line in devices_list.splitlines():
                 data = line.split("\t")
                 selected_device = tk.StringVar()
-                name = self.device_name_formatted(data[0])
+                name = self.device_name_formatted(data[0], data[1])
 
                 device_check = ttk.Checkbutton(
                     container,
