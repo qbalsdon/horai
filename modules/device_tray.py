@@ -9,10 +9,7 @@ from tkinter import Menu
 from tkinter import simpledialog
 from tkinter import filedialog as fd
 
-# from menu_builder import *
-
-from modules import connected_android_devices
-
+from modules import connected_android_devices, menu_builder, menu_payload
 from modules.xml_viewer import XML_Viewer
 
 class DeviceTray:
@@ -145,7 +142,17 @@ class DeviceTray:
         #     lambda data: self.show_table(root, data),
         #     lambda data: self.show_xml(root, data),
         #     lambda: root.destroy())
-        # menu, key_bindings = create_menu(root, action_mapper.action_map)
+
+        payload = menu_payload.MenuPayload(
+            self.selected_device_list,
+            self.find_file,
+            self.get_user_input,
+            lambda data: self.show_table(root, data),
+            lambda data: self.show_xml(root, data),
+            lambda: root.destroy()
+        )
+        menu, key_bindings = menu_builder.create_menu(root, payload)
+
         self.devices_frame = self.create_device_frame(root)
         self.devices_frame.grid(row=0, column=0, sticky='NWS')
         # for binding in key_bindings:

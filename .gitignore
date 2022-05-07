@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Horai ignored
+/menu_custom/*.*
+!/menu_custom/example.py
