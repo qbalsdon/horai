@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 import os
+import subprocess
 
 class AndroidDevice:
     """
     Represents an android device. Can fetch UI as XML and run basic commands that interact with the Android Debug Bridge (adb)
     """
-    def __init__(self, serial_number, alias, scrcpy_flags, ui_dump_location):
+    def __init__(self, serial_number, alias="", scrcpy_flags=""):
         self.serial_number = serial_number
         self.alias = alias
         self.scrcpy_flags = scrcpy_flags
-        self.ui_dump_location = ui_dump_location
 
     def _add_adb(self, parameters):
         params = parameters
@@ -35,12 +35,13 @@ class AndroidDevice:
         self.adb_command(["shell", "rm", fileReference], output=False)
 
     def fetch_window_dump(self):
-        xml_file="window_dump.xml"
-        file_to_read = f"{self.ui_dump_location}{xml_file}"
         try:
-            self._remove_window_dump(file_to_read)
-            self.adb_command(["exec-out", "uiautomator", "dump"], output=False)
+            output = self.adb_command(["exec-out", "uiautomator", "dump"])
+            file_to_read = output.replace("UI hierchary dumped to: ","")
+            print(f" --> FILE DUMPED TO {file_to_read}")
             self.adb_command(["pull", file_to_read], output=False)
+            xml_file = os.path.basename(file_to_read)
+            print(f" --> reading {xml_file}")
             with open(xml_file) as file:
                 data = file.read()
             os.remove(xml_file)
