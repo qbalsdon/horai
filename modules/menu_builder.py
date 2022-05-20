@@ -8,6 +8,10 @@ from os.path import isfile, join
 
 from menu.file import FileMenu
 
+"""
+Helper module for building the menu system
+"""
+
 def create_cascade(parent, list_name, action_list, key_binding):
     menu_item = Menu(
         parent,
@@ -34,7 +38,7 @@ def create_cascade(parent, list_name, action_list, key_binding):
             )
     return menu_item
 
-def create_menu(root_window, payload):
+def create_menus(root_window, payload):
     # create the menu
     menubar = Menu(root_window)
     key_binding = {}
@@ -60,4 +64,4 @@ def create_menu(root_window, payload):
             underline=0
         )
 
-    return menubar, key_binding
+    return key_binding

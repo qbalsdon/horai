@@ -14,13 +14,65 @@ from modules.xml_viewer import XML_Viewer
 
 class DeviceTray:
 
+    def __init__(self, root, queue, load_settings, quit_command):
+        self.root = root
+        self.queue = queue
+        self.load_settings = load_settings
+        self.quit_command = quit_command
+
+        self.user_devices = []
+        # Set up the GUI
+        root.title('Device Tray')
+        icon = tk.PhotoImage(file = 'images/app_icon.png')
+        root.iconphoto(False, icon)
+
+        payload = menu_payload.MenuPayload(
+            self.selected_device_list,
+            self.load_settings,
+            self.find_file,
+            self.get_user_input,
+            lambda data: self.show_table(root, data),
+            lambda data: self.show_xml(root, data),
+            self.quit_command
+        )
+        key_bindings = menu_builder.create_menus(root, payload)
+
+        self.devices_frame = self.create_device_frame(root)
+        self.devices_frame.grid(row=0, column=0, sticky='NWS')
+        for binding in key_bindings:
+            if "-" in binding:
+                arr=binding.split("-")
+                modifier = arr[0]
+                key = arr[1]
+                if len(key) == 1:
+                    key = key.lower()
+                binding_name=f"{modifier}-{key}"
+            else:
+                binding_name=f"{binding.lower()}"
+            self.create_binding(root, binding_name, key_bindings[binding])
+
+    # The polling client calls this to periodically refresh the device tray
+    def processIncoming(self):
+        """Handle all messages currently in the queue, if any."""
+        while self.queue.qsize():
+            try:
+                msg = self.queue.get(0)
+                self.populate_devices_frame(self.devices_frame)
+                # Check contents of message and do whatever is needed. As a
+                # simple test, print it (in real life, you would
+                # suitably update the GUI's display in a richer fashion).
+            except queue.Empty:
+                # just on general principles, although we don't
+                # expect this branch to be taken in this case
+                pass
+
     def clear_frame(self, container):
         for widget in container.winfo_children():
            widget.destroy()
         container.pack_forget()
 
     def device_name_formatted(self, device_serial, device_state):
-        name = None #get_device_name(device_serial)
+        name = None # get device name based on serial from settings
         if name == None:
             name = device_serial
         else:
@@ -30,13 +82,6 @@ class DeviceTray:
             return name
         else:
             return f"{name} ({device_state})"
-
-    def create_binding(self, listener, binding_name, fn):
-        binding = f"<{binding_name}>"
-        if len(binding_name) == 1:
-            binding = f"{binding_name}"
-        # print(f"Key bind: [{binding}]")
-        listener.bind_all(binding, lambda event: fn())
 
     def toggle_device(self, device_serial, str_var):
         if str_var.get() == device_serial:
@@ -57,7 +102,7 @@ class DeviceTray:
             current_row = 0
             for line in devices_list.splitlines():
                 data = line.split("\t")
-                selected_device = tk.StringVar()
+                device_selected_variable = tk.StringVar()
                 name = self.device_name_formatted(data[0], data[1])
 
                 device_check = ttk.Checkbutton(
@@ -66,29 +111,40 @@ class DeviceTray:
                     onvalue=data[0],
                     offvalue="",
                     compound='left',
-                    variable=selected_device)
+                    variable=device_selected_variable)
                 if data[0] in previous_selection:
-                    selected_device.set(data[0])
-                self.user_devices.append(selected_device)
+                    device_selected_variable.set(data[0])
+                self.user_devices.append(device_selected_variable)
 
                 device_check.pack(fill=tk.X, side=tk.TOP, padx=(10, 10), pady=(5, 5))
                 current_row = current_row + 1
                 self.create_binding(
                     device_check,
                     f"{current_row}",
-                    lambda device_serial=data[0], variable=selected_device: self.toggle_device(device_serial, variable)
+                    lambda device_serial=data[0], variable=device_selected_variable: self.toggle_device(device_serial, variable)
                 )
-
+    # Creates the inital frame for the devices
     def create_device_frame(self, container):
         devices_frame = ttk.Frame(container)
         devices_frame.grid(row=1, column=0, columnspan=1, sticky='NW', pady=(5, 5))
         self.populate_devices_frame(devices_frame)
         return devices_frame
 
+    # Handles keyboard bindings from generated menus
+    def create_binding(self, listener, binding_name, fn):
+        binding = f"<{binding_name}>"
+        if len(binding_name) == 1:
+            binding = f"{binding_name}"
+        # print(f"Key bind: [{binding}]")
+        listener.bind_all(binding, lambda event: fn())
+
+    # fetches a list of selected devices
     def selected_device_list(self):
         mapped = list(map((lambda var: var.get()), self.user_devices))
         return list(filter(lambda value: len(value) > 0, mapped))
 
+    # Part of the menu_payload operations - they perform UI output on behalf of the commands
+    # Could be separated into modules
     def find_file(self):
         filename = fd.askopenfilename()
         return filename
@@ -130,57 +186,3 @@ class DeviceTray:
     def show_xml(self, root, device_data):
         for device in device_data:
             self.create_xml_window(root, self.device_name_formatted(device), device_data[device])
-
-    def __init__(self, root, queue, endCommand):
-        self.queue = queue
-        self.user_devices = []
-        # Set up the GUI
-        root.title('Device Tray')
-        icon = tk.PhotoImage(file = 'images/app_icon.png')
-        root.iconphoto(False, icon)
-
-        # action_mapper = ActionMapper(
-        #     self.selected_device_list,
-        #     self.find_file,
-        #     self.get_user_input,
-        #     lambda data: self.show_table(root, data),
-        #     lambda data: self.show_xml(root, data),
-        #     lambda: root.destroy())
-
-        payload = menu_payload.MenuPayload(
-            self.selected_device_list,
-            self.find_file,
-            self.get_user_input,
-            lambda data: self.show_table(root, data),
-            lambda data: self.show_xml(root, data),
-            lambda: root.destroy()
-        )
-        menu, key_bindings = menu_builder.create_menu(root, payload)
-
-        self.devices_frame = self.create_device_frame(root)
-        self.devices_frame.grid(row=0, column=0, sticky='NWS')
-        # for binding in key_bindings:
-        #     if "-" in binding:
-        #         arr=binding.split("-")
-        #         modifier = arr[0]
-        #         key = arr[1]
-        #         if len(key) == 1:
-        #             key = key.lower()
-        #         binding_name=f"{modifier}-{key}"
-        #     else:
-        #         binding_name=f"{binding.lower()}"
-        #     self.create_binding(root, binding_name, key_bindings[binding])
-
-    def processIncoming(self):
-        """Handle all messages currently in the queue, if any."""
-        while self.queue.qsize():
-            try:
-                msg = self.queue.get(0)
-                self.populate_devices_frame(self.devices_frame)
-                # Check contents of message and do whatever is needed. As a
-                # simple test, print it (in real life, you would
-                # suitably update the GUI's display in a richer fashion).
-            except queue.Empty:
-                # just on general principles, although we don't
-                # expect this branch to be taken in this case
-                pass

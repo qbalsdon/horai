@@ -24,7 +24,7 @@ class PollingClient:
         self.queue = queue.Queue()
 
         # Set up the GUI part
-        self.gui = DC.DeviceTray(self.root_view, self.queue, self.endApplication)
+        self.gui = DC.DeviceTray(self.root_view, self.queue, self.load_settings, self.endApplication)
 
         # Set up the thread to do asynchronous I/O
         # More threads can also be created and used, if necessary
@@ -64,3 +64,4 @@ class PollingClient:
 
     def endApplication(self):
         self.running = 0
+        self.root_view.quit()

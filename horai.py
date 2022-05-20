@@ -8,6 +8,9 @@ from modules import polling_client as PC
 from modules import android_device as AD
 
 def load_settings():
+    if os.environ.get('HORAI_SETTINGS') is None:
+        return None
+    
     try:
         settings_file = os.environ['HORAI_SETTINGS']
         with open(settings_file, 'r') as file:
@@ -31,8 +34,8 @@ def is_adb_installed():
 
 def start():
     root = tk.Tk()
-    width = root.winfo_width() #get root width size
-    height = root.winfo_screenheight() #get screen height size
+    width = root.winfo_screenwidth() / 8 # create screen width
+    height = root.winfo_screenheight() # get screen height
     root.geometry("%dx%d" % (width, height))
 
     client = PC.PollingClient(root, load_settings)
