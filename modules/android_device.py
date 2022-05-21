@@ -26,6 +26,7 @@ class AndroidDevice:
             name = self.alias
         self._run_command_async(["scrcpy", "-s", self.serial_number, "--window-title", name, self.scrcpy_flags])
 
+    # Does not use the flags
     def scrcpy_record(self, location):
         datestr = date.today().strftime("%d_%B_%Y")
         device_name = self.serial_number

@@ -9,7 +9,9 @@ from tkinter import Menu
 from tkinter import simpledialog
 from tkinter import filedialog as fd
 
-from modules import connected_android_devices, menu_builder, menu_payload
+from helpers import connected_android_devices, menu_builder
+
+from modules import menu_payload
 from modules.xml_viewer import XML_Viewer
 
 class DeviceTray:
