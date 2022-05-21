@@ -23,14 +23,11 @@ class DeviceTray:
         self.quit_command = quit_command
 
         self.user_devices = []
-        # Set up the GUI
-        root.title('Device Tray')
-        icon = tk.PhotoImage(file = 'images/app_icon.png')
-        root.iconphoto(False, icon)
-
+    
         payload = menu_payload.MenuPayload(
             self.selected_device_list,
             self.root,
+            self.load_settings,
             self.quit_command
         )
         key_bindings = menu_builder.create_menus(root, payload)

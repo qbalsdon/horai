@@ -10,7 +10,7 @@ from modules import android_device as AD
 def load_settings():
     if os.environ.get('HORAI_SETTINGS') is None:
         return None
-    
+
     try:
         settings_file = os.environ['HORAI_SETTINGS']
         with open(settings_file, 'r') as file:
@@ -37,6 +37,10 @@ def start():
     width = root.winfo_screenwidth() / 8 # create screen width
     height = root.winfo_screenheight() # get screen height
     root.geometry("%dx%d" % (width, height))
+
+    root.title('Device Tray')
+    icon = tk.PhotoImage(file = 'images/app_icon.png')
+    root.iconphoto(False, icon)
 
     client = PC.PollingClient(root, load_settings)
     root.mainloop()

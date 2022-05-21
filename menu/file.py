@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from settings import SettingsEditor
+from modules.settings import SettingsEditor
 
 """
 Creates the menu options under the 'File' heading
@@ -13,9 +13,9 @@ class FileMenu:
 
         self.action_map = {
             "About" : lambda: print("TODO: Show about screen"),
-            "Settings" : lambda: show_settings(),
+            "Settings" : lambda: self.show_settings(),
             "Close" : lambda: self.menu_payload.exit()
         }
 
     def show_settings(self):
-        SettingsEditor(self.menu_payload.root_window)
+        SettingsEditor(self.menu_payload.window_root)
