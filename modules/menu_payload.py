@@ -10,17 +10,11 @@ class MenuPayload:
     def __init__(self,
                  get_selected_devices,
                  load_settings,
-                 file_select_lambda,
-                 user_input_lambda,
-                 show_table_lambda,
-                 show_xml_lambda,
+                 window_root,
                  exit_lambda):
         self.get_selected_devices = get_selected_devices
+        self.window_root = window_root,
         self.load_settings = load_settings
-        self.file_select = file_select_lambda
-        self.user_input = user_input_lambda
-        self.show_table = show_table_lambda
-        self.show_xml = show_xml_lambda
         self.exit = exit_lambda
 
     def run_on_all(self, fn):

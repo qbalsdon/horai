@@ -30,11 +30,7 @@ class DeviceTray:
 
         payload = menu_payload.MenuPayload(
             self.selected_device_list,
-            self.load_settings,
-            self.find_file,
-            self.get_user_input,
-            lambda data: self.show_table(root, data),
-            lambda data: self.show_xml(root, data),
+            self.root,
             self.quit_command
         )
         key_bindings = menu_builder.create_menus(root, payload)
@@ -146,7 +142,7 @@ class DeviceTray:
         return list(filter(lambda value: len(value) > 0, mapped))
 
     # Part of the menu_payload operations - they perform UI output on behalf of the commands
-    # Could be separated into modules
+    # TODO: separate into helpers or single use
     def find_file(self):
         filename = fd.askopenfilename()
         return filename
