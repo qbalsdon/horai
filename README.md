@@ -5,14 +5,14 @@ The aim of this project is to allow Android Developers and testers greater contr
 
 ## Requirements
   - [Android Debug Bridge (ADB)][1]
-  - Python 3 (required)
+  - Python 3 (required) - Developed with `Python 3.9.12`
   - tkinter (required)
   - A writable text file referenced in an environment variable called `HORAI_SETTINGS`
 
 ## Optional dependencies
 
 ### On your computer
-  - GenyMotion's [scrcpy][0] (optional, but assumed)
+  - GenyMotion's [scrcpy][0] (optional, but assumed) - Developed with `scrcpy 1.24`
 
 ### On your Android device
   - [Accessibility scanner][4]

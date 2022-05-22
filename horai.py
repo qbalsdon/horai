@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import json
 import subprocess
 import tkinter as tk
 
@@ -21,9 +22,17 @@ def load_settings():
     except:
         return {}
 
-# TODO
 def save_settings(data):
-    pass
+    data_str = json.dumps(data, indent = 4)
+    try:
+        settings_file = os.environ['HORAI_SETTINGS']
+        with open(settings_file, 'w') as file:
+            file.seek(0)
+            file.write(data_str)
+            file.truncate()
+    except Exception as e:
+        print("!! Error writing to file !!")
+        print(e)
 
 def is_adb_installed():
     try:
@@ -42,7 +51,7 @@ def start():
     icon = tk.PhotoImage(file = 'images/app_icon.png')
     root.iconphoto(False, icon)
 
-    client = PC.PollingClient(root, load_settings)
+    client = PC.PollingClient(root, load_settings, save_settings)
     root.mainloop()
 
 if __name__ == "__main__":

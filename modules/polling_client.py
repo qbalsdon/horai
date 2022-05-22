@@ -11,7 +11,7 @@ class PollingClient:
     endApplication could reside in the GUI part, but putting them here
     means that you have all the thread controls in a single place.
     """
-    def __init__(self, root_view, load_settings):
+    def __init__(self, root_view, load_settings, save_settings):
         """
         Start the GUI and the asynchronous threads. We are in the main
         (original) thread of the application, which will later be used by
@@ -19,12 +19,13 @@ class PollingClient:
         """
         self.root_view = root_view
         self.load_settings = load_settings
+        self.save_settings = save_settings
 
         # Create the queue
         self.queue = queue.Queue()
 
         # Set up the GUI part
-        self.gui = DC.DeviceTray(self.root_view, self.queue, self.load_settings, self.endApplication)
+        self.gui = DC.DeviceTray(self.root_view, self.queue, self.load_settings, self.save_settings, self.endApplication)
 
         # Set up the thread to do asynchronous I/O
         # More threads can also be created and used, if necessary

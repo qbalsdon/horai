@@ -8,13 +8,15 @@ class MenuPayload:
     different dependencies easier for developers.
     """
     def __init__(self,
+                 window_root,
                  get_selected_devices,
                  load_settings,
-                 window_root,
+                 save_settings,
                  exit_lambda):
         self.get_selected_devices = get_selected_devices
         self.window_root = window_root,
         self.load_settings = load_settings
+        self.save_settings = save_settings
         self.exit = exit_lambda
 
     def run_on_all(self, fn):

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+from datetime import date
 from subprocess import Popen, run, PIPE, STDOUT
 
 class AndroidDevice:
@@ -31,8 +32,9 @@ class AndroidDevice:
         datestr = date.today().strftime("%d_%B_%Y")
         device_name = self.serial_number
         if self.alias != "":
-            device_name = self.alias
-        name = f"{location}/{device}-{device_name.replace(' ','_')}-{datestr}.mp4"
+            device_name = f"{device_name}-{self.alias.replace(' ','_')}"
+
+        name = f"{location}/{device_name}-{datestr}.mp4"
         # name = f"/Users/quba/Downloads/recording.mp4"
         title = f"RECORDING {device_name}"
         self._run_command_async(["scrcpy", "-s", self.serial_number, "--record", name, "--window-title", title])

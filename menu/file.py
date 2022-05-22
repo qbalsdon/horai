@@ -18,4 +18,4 @@ class FileMenu:
         }
 
     def show_settings(self):
-        SettingsEditor(self.menu_payload.window_root)
+        SettingsEditor(self.menu_payload)

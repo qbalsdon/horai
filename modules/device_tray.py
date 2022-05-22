@@ -16,18 +16,20 @@ from modules.xml_viewer import XML_Viewer
 
 class DeviceTray:
 
-    def __init__(self, root, queue, load_settings, quit_command):
+    def __init__(self, root, queue, load_settings, save_settings, quit_command):
         self.root = root
         self.queue = queue
         self.load_settings = load_settings
+        self.save_settings = save_settings
         self.quit_command = quit_command
 
         self.user_devices = []
-    
+
         payload = menu_payload.MenuPayload(
-            self.selected_device_list,
             self.root,
+            self.selected_device_list,
             self.load_settings,
+            self.save_settings,
             self.quit_command
         )
         key_bindings = menu_builder.create_menus(root, payload)

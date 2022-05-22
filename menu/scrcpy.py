@@ -5,6 +5,8 @@ from sys import platform
 
 from helpers.open_web_site import open_web_page
 
+from modules.settings import SAVE_LOCATION_KEY
+
 """
 Creates the menu options under the 'Scrcpy' heading
 """
@@ -27,11 +29,11 @@ class ScrcpyMenu:
 
     def record_scrcpy(self):
         settings = self.menu_payload.load_settings()
-        if "SAVE_FILE_LOCATION" not in settings or settings["SAVE_FILE_LOCATION"] == None:
+        if SAVE_LOCATION_KEY not in settings or settings[SAVE_LOCATION_KEY] == None:
             print("!! NO SAVE LOCATION SET !!")
             return
         for device in self.menu_payload.get_all_selected_devices():
-            device.scrcpy_record()
+            device.scrcpy_record(settings[SAVE_LOCATION_KEY])
 
     def close_windows(self):
         # TODO: test windows version
